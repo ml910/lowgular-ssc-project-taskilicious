@@ -5,7 +5,7 @@
     *ngIf="hasRoute('categories/create')"
     mat-icon-button
     aria-label="Categories list"
-    (click)="redirectToList()"
+    (click)="redirectTo('categories')"
   >
     <mat-icon>list</mat-icon>
   </button>
@@ -13,7 +13,7 @@
     *ngIf="!hasRoute('categories/create')"
     mat-icon-button
     aria-label="Add a category"
-    (click)="redirectToCreate()"
+    (click)="redirectTo('categories/create')"
   >
     <mat-icon>add_circle_outline</mat-icon>
   </button>

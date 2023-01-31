@@ -12,14 +12,8 @@ export class AppComponent {
     private _activatedRoute: ActivatedRoute
   ) {}
 
-  redirectToList(): void {
-    this._router.navigate(['categories'], { relativeTo: this._activatedRoute });
-  }
-
-  redirectToCreate(): void {
-    this._router.navigate(['categories/create'], {
-      relativeTo: this._activatedRoute,
-    });
+  redirectTo(route: string) {
+    this._router.navigate([route], { relativeTo: this._activatedRoute });
   }
 
   hasRoute(route: string): boolean {
