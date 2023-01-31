@@ -1,0 +1,11 @@
+<h1>Welcome to Taskilicious</h1>
+
+<h3>Choose a category</h3>
+
+<mat-list role="list"
+  ><mat-list-item
+    role="listitem"
+    *ngFor="let category of categories$ | async"
+    >{{ category.name }}</mat-list-item
+  ></mat-list
+>
