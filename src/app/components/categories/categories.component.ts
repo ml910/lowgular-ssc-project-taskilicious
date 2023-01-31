@@ -3,6 +3,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CategoryModel } from '../../models/category.model';
 import { CategoriesService } from '../../services/categories.service';
@@ -15,8 +16,16 @@ import { CategoriesService } from '../../services/categories.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoriesComponent {
-  constructor(private _categoriesService: CategoriesService) {}
+  constructor(
+    private _categoriesService: CategoriesService,
+    private _router: Router,
+    private _activatedRoute: ActivatedRoute
+  ) {}
 
   readonly categories$: Observable<CategoryModel[]> =
     this._categoriesService.getAllCategories();
+
+  redirectToCreate(): void {
+    this._router.navigate(['create'], { relativeTo: this._activatedRoute });
+  }
 }

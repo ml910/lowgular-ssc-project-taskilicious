@@ -12,4 +12,13 @@ export class CategoriesService {
       'https://63761992b5f0e1eb850298da.mockapi.io/categories'
     );
   }
+
+  create(
+    category: Omit<CategoryModel, 'id'>
+  ): Observable<Omit<CategoryModel, 'id'>> {
+    return this._httpClient.post<Omit<CategoryModel, 'id'>>(
+      'https://63761992b5f0e1eb850298da.mockapi.io/categories',
+      category
+    );
+  }
 }

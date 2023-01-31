@@ -1,11 +1,35 @@
-<h1>Welcome to Taskilicious</h1>
-
 <h3>Choose a category</h3>
 
-<mat-list role="list"
-  ><mat-list-item
-    role="listitem"
-    *ngFor="let category of categories$ | async"
-    >{{ category.name }}</mat-list-item
-  ></mat-list
+<mat-list role="list" *ngIf="categories$ | async as categories; else loader">
+  <ng-container *ngIf="categories.length > 0; else noCategories">
+    <mat-list-item role="listitem" *ngFor="let category of categories">{{
+      category.name
+    }}</mat-list-item>
+  </ng-container>
+</mat-list>
+
+<button
+  mat-fab
+  color="primary"
+  class="mt-5 fixed right-10 bottom-10"
+  (click)="redirectToCreate()"
 >
+  <mat-icon>add</mat-icon>
+</button>
+
+<ng-template #loader>
+  <mat-progress-spinner
+    [color]="'primary'"
+    [mode]="'indeterminate'"
+    [value]="50"
+  >
+  </mat-progress-spinner>
+</ng-template>
+
+<ng-template #noCategories>
+  <div
+    class="border-2 border-solid border-slate-200 p-4 m-10 flex flex-col items-center justify-items-center"
+  >
+    Sorry, there are no categories to be shown
+  </div>
+</ng-template>
