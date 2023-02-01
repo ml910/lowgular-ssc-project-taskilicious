@@ -1,25 +1,25 @@
 <h3 class="font-bold text-xl">Choose a category</h3>
 
 <ng-container *ngIf="categories$ | async as categories; else loader">
-  <form [formGroup]="sortForm">
-    <mat-form-field appearance="outline">
-      <mat-label>Choose an option</mat-label>
-      <mat-select formControlName="sortBy" [compareWith]="compareSortOptions">
-        <mat-option
-          *ngFor="let sortOption of sortOptions"
-          [value]="sortOption"
-          [disabled]="
-            compareSortOptions(currentlySelectedSortOption, sortOption)
-          "
-        >
-          {{ sortOption }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </form>
+  <ng-container *ngIf="categories.length > 0; else noCategories">
+    <form [formGroup]="sortForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Choose sorting option</mat-label>
+        <mat-select formControlName="sortBy" [compareWith]="compareSortOptions">
+          <mat-option
+            *ngFor="let sortOption of sortOptions"
+            [value]="sortOption"
+            [disabled]="
+              compareSortOptions(currentlySelectedSortOption, sortOption)
+            "
+          >
+            {{ sortOption }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
 
-  <mat-list role="list">
-    <ng-container *ngIf="categories.length > 0; else noCategories">
+    <mat-list role="list">
       <mat-list-item
         class="my-3"
         role="listitem"
@@ -37,8 +37,8 @@
           <mat-icon>edit</mat-icon>
         </button>
       </mat-list-item>
-    </ng-container>
-  </mat-list>
+    </mat-list>
+  </ng-container>
 </ng-container>
 
 <button
