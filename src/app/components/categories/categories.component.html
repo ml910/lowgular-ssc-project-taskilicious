@@ -4,8 +4,14 @@
   <form [formGroup]="sortForm">
     <mat-form-field appearance="outline">
       <mat-label>Choose an option</mat-label>
-      <mat-select formControlName="sortBy">
-        <mat-option *ngFor="let sortOption of sortOptions" [value]="sortOption">
+      <mat-select formControlName="sortBy" [compareWith]="compareSortOptions">
+        <mat-option
+          *ngFor="let sortOption of sortOptions"
+          [value]="sortOption"
+          [disabled]="
+            compareSortOptions(currentlySelectedSortOption, sortOption)
+          "
+        >
           {{ sortOption }}
         </mat-option>
       </mat-select>

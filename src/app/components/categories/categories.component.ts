@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { CategoriesService } from '../../services/categories.service';
 import { CategoryModel } from '../../models/category.model';
 
@@ -42,6 +42,14 @@ export class CategoriesComponent {
   readonly sortOptions: string[] = ['A-Z', 'Z-A'];
 
   readonly sortForm = new FormGroup({ sortBy: new FormControl() });
+
+  get currentlySelectedSortOption(): string {
+    return this.sortForm.controls.sortBy.value;
+  }
+
+  compareSortOptions(a: string, b: string): boolean {
+    return a === b;
+  }
 
   redirectToDetails(categoryId: string): void {
     this._router.navigate([`${categoryId}`], {
