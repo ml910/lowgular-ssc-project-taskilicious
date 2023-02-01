@@ -1,13 +1,21 @@
-<h3>Choose a category</h3>
+<h3 class="font-bold text-xl">Choose a category</h3>
 
 <mat-list role="list" *ngIf="categories$ | async as categories; else loader">
   <ng-container *ngIf="categories.length > 0; else noCategories">
     <mat-list-item
-      class="my-2"
+      class="my-3"
       role="listitem"
       *ngFor="let category of categories"
-      >{{ category.name }}
-      <button mat-mini-fab class="ml-2" (click)="redirectToEdit(category.id)">
+      ><span
+        (click)="redirectToDetails(category.id)"
+        class="cursor-pointer hover:text-zinc-700 transition-colors transition-transform hover:scale-105 will-change-transform"
+        >{{ category.name }}</span
+      >
+      <button
+        mat-mini-fab
+        class="ml-3 hover:bg-amber-200 transition-transform transition-colors hover:scale-110 will-change-transform"
+        (click)="redirectToEdit(category.id)"
+      >
         <mat-icon>edit</mat-icon>
       </button>
     </mat-list-item>
@@ -17,7 +25,7 @@
 <button
   mat-fab
   color="primary"
-  class="mt-5 fixed right-10 bottom-10"
+  class="mt-5 fixed right-10 bottom-10 hover:bg-primary-700 hover:scale-110 will-change-transform transition-colors transition-transform"
   routerLink="/categories/create"
 >
   <mat-icon>add</mat-icon>
