@@ -4,7 +4,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { CategoriesService } from '../../services/categories.service';
 import { CategoryModel } from '../../models/category.model';
@@ -17,11 +16,7 @@ import { CategoryModel } from '../../models/category.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoriesComponent {
-  constructor(
-    private _categoriesService: CategoriesService,
-    private _router: Router,
-    private _activatedRoute: ActivatedRoute
-  ) {}
+  constructor(private _categoriesService: CategoriesService) {}
 
   private destroySubject = new Subject<void>();
 
@@ -52,17 +47,5 @@ export class CategoriesComponent {
 
   compareSortOptions(a: string, b: string): boolean {
     return a === b;
-  }
-
-  redirectToDetails(categoryId: string): void {
-    this._router.navigate([`${categoryId}`], {
-      relativeTo: this._activatedRoute,
-    });
-  }
-
-  redirectToEdit(categoryId: string): void {
-    this._router.navigate([`edit/${categoryId}`], {
-      relativeTo: this._activatedRoute,
-    });
   }
 }
