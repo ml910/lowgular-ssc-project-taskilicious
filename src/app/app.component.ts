@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  // TODO: Move this to a separate component - app.component should be clean
   constructor(
     public _router: Router,
     private _activatedRoute: ActivatedRoute
