@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CategoriesComponent } from './categories.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { CategoriesComponent } from './categories.component';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    RouterModule,
   ],
   declarations: [CategoriesComponent],
   providers: [],

@@ -2,9 +2,15 @@
 
 <mat-list role="list" *ngIf="categories$ | async as categories; else loader">
   <ng-container *ngIf="categories.length > 0; else noCategories">
-    <mat-list-item role="listitem" *ngFor="let category of categories">{{
-      category.name
-    }}</mat-list-item>
+    <mat-list-item
+      class="my-2"
+      role="listitem"
+      *ngFor="let category of categories"
+      >{{ category.name }}
+      <button mat-mini-fab class="ml-2" (click)="redirectToEdit(category.id)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-list-item>
   </ng-container>
 </mat-list>
 
@@ -12,7 +18,7 @@
   mat-fab
   color="primary"
   class="mt-5 fixed right-10 bottom-10"
-  (click)="redirectToCreate()"
+  routerLink="/categories/create"
 >
   <mat-icon>add</mat-icon>
 </button>

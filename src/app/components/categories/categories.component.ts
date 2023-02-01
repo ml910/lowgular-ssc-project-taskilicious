@@ -25,7 +25,9 @@ export class CategoriesComponent {
   readonly categories$: Observable<CategoryModel[]> =
     this._categoriesService.getAllCategories();
 
-  redirectToCreate(): void {
-    this._router.navigate(['create'], { relativeTo: this._activatedRoute });
+  redirectToEdit(categoryId: string): void {
+    this._router.navigate([`edit/${categoryId}`], {
+      relativeTo: this._activatedRoute,
+    });
   }
 }
