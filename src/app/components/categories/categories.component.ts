@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { CategoriesService } from '../../services/categories.service';
 import { CategoryModel } from '../../models/category.model';
 
@@ -23,12 +23,15 @@ export class CategoriesComponent {
     private _activatedRoute: ActivatedRoute
   ) {}
 
+  private destroySubject = new Subject<void>();
+
   readonly categories$: Observable<CategoryModel[]> = this._categoriesService
     .getAllCategories()
     .pipe(
       tap((categories) => {
         this.sortForm.controls.sortBy.valueChanges
           .pipe(
+            takeUntil(this.destroySubject),
             map((value) =>
               value === 'A-Z'
                 ? categories.sort((a, b) => a.name.localeCompare(b.name))
