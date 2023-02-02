@@ -3,10 +3,10 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { CategoryModel } from '../../models/category.model';
+import { FormControl, FormGroup } from '@angular/forms';
+import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { CategoriesService } from '../../services/categories.service';
+import { CategoryModel } from '../../models/category.model';
 
 @Component({
   selector: 'app-categories',
@@ -16,16 +16,36 @@ import { CategoriesService } from '../../services/categories.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoriesComponent {
-  constructor(
-    private _categoriesService: CategoriesService,
-    private _router: Router,
-    private _activatedRoute: ActivatedRoute
-  ) {}
+  constructor(private _categoriesService: CategoriesService) {}
 
-  readonly categories$: Observable<CategoryModel[]> =
-    this._categoriesService.getAllCategories();
+  private destroySubject = new Subject<void>();
 
-  redirectToCreate(): void {
-    this._router.navigate(['create'], { relativeTo: this._activatedRoute });
+  readonly categories$: Observable<CategoryModel[]> = this._categoriesService
+    .getAllCategories()
+    .pipe(
+      tap((categories) => {
+        this.sortForm.controls.sortBy.valueChanges
+          .pipe(
+            takeUntil(this.destroySubject),
+            map((value) =>
+              value === 'A-Z'
+                ? categories.sort((a, b) => a.name.localeCompare(b.name))
+                : categories.sort((a, b) => b.name.localeCompare(a.name))
+            )
+          )
+          .subscribe();
+      })
+    );
+
+  readonly sortOptions: string[] = ['A-Z', 'Z-A'];
+
+  readonly sortForm = new FormGroup({ sortBy: new FormControl() });
+
+  get currentlySelectedSortOption(): string {
+    return this.sortForm.controls.sortBy.value;
+  }
+
+  compareSortOptions(a: string, b: string): boolean {
+    return a === b;
   }
 }

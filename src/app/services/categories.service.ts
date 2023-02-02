@@ -21,4 +21,17 @@ export class CategoriesService {
       category
     );
   }
+
+  getOneById(categoryId: string): Observable<CategoryModel> {
+    return this._httpClient.get<CategoryModel>(
+      `https://63761992b5f0e1eb850298da.mockapi.io/categories/${categoryId}`
+    );
+  }
+
+  updateById(category: CategoryModel): Observable<CategoryModel> {
+    return this._httpClient.put<CategoryModel>(
+      `https://63761992b5f0e1eb850298da.mockapi.io/categories/${category.id}`,
+      category
+    );
+  }
 }

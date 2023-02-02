@@ -1,0 +1,13 @@
+<ng-container *ngIf="categoryDetails$ | async as category; else loader"
+  >Welcome to category:
+  <span class="capitalize">{{ category.name }}</span></ng-container
+>
+
+<ng-template #loader>
+  <mat-progress-spinner
+    [color]="'primary'"
+    [mode]="'indeterminate'"
+    [value]="50"
+  >
+  </mat-progress-spinner>
+</ng-template>

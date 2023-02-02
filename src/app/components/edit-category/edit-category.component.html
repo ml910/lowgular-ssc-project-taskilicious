@@ -1,0 +1,44 @@
+<ng-container *ngIf="category$ | async as category; else loader">
+  <form
+    [formGroup]="categoryEditForm"
+    (ngSubmit)="onCategoryEditFormSubmitted(categoryEditForm)"
+  >
+    <div>
+      <mat-form-field appearance="outline" class="mb-5"
+        ><mat-label>Name</mat-label
+        ><input
+          matInput
+          type="text"
+          placeholder="Name"
+          formControlName="name"
+          required
+        />
+        <mat-error *ngIf="!categoryEditForm.get('name')!.errors?.required"
+          >Please use letters only</mat-error
+        >
+        <mat-error *ngIf="!categoryEditForm.get('name')!.errors?.pattern"
+          >Entering a name is obligatory</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div>
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="!categoryEditForm.valid"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</ng-container>
+
+<ng-template #loader>
+  <mat-progress-spinner
+    [color]="'primary'"
+    [mode]="'indeterminate'"
+    [value]="50"
+  >
+  </mat-progress-spinner>
+</ng-template>

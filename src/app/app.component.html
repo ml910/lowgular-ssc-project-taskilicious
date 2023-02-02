@@ -3,7 +3,7 @@
   <h1>Welcome to Taskilicious</h1>
   <span class="topbar-flex"></span>
   <button
-    *ngIf="hasRoute('categories/create')"
+    *ngIf="hasRoute('categories/')"
     mat-icon-button
     aria-label="Categories list"
     (click)="redirectTo('categories')"
@@ -21,6 +21,6 @@
   <!--   TODO: add theme switcher -->
 </mat-toolbar>
 
-<main class="m-5">
+<main class="p-5">
   <router-outlet></router-outlet>
 </main>
