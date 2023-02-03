@@ -13,7 +13,7 @@ export class TasksService {
     );
   }
 
-  createTask(task: TaskModel): Observable<TaskModel> {
+  createTask(task: Omit<TaskModel, 'id'>): Observable<TaskModel> {
     return this._httpClient.post<TaskModel>(
       'https://63761992b5f0e1eb850298da.mockapi.io/tasks',
       task
