@@ -4,7 +4,7 @@
 >
 
 <ng-container *ngIf="tasksInCategory$ | async as tasks">
-  <table class="mat-elevation-z8" [dataSource]="tasks" mat-table>
+  <table class="mat-elevation-z8 mt-10" [dataSource]="tasks" mat-table>
     <!-- Column 1 -->
     <ng-container [matColumnDef]="tasksTableColumns[0]">
       <th *matHeaderCellDef mat-header-cell>
@@ -24,6 +24,15 @@
     <tr *matRowDef="let row; columns: tasksTableColumns" mat-row></tr>
   </table>
 </ng-container>
+
+<button
+  mat-fab
+  class="mt-5"
+  color="primary"
+  [routerLink]="'../../tasks/create'"
+>
+  <mat-icon>add</mat-icon>
+</button>
 
 <ng-template #loader>
   <mat-progress-spinner

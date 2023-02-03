@@ -1,0 +1,67 @@
+<ng-container *ngIf="categories$ | async as categories; else loader">
+  <form
+    [formGroup]="createTaskForm"
+    (ngSubmit)="onCreateTaskFormSubmitted(createTaskForm)"
+  >
+    <div>
+      <mat-form-field appearance="outline"
+        ><mat-label>Name</mat-label
+        ><input
+          matInput
+          type="text"
+          placeholder="Name"
+          formControlName="name"
+          required
+        /><mat-error *ngIf="createTaskForm.get('name')!.errors?.required"
+          >Name is required</mat-error
+        >
+        <mat-error *ngIf="createTaskForm.get('name')!.errors?.pattern"
+          >Please use letters only</mat-error
+        >
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Choose an option</mat-label>
+      <mat-select formControlName="category" [compareWith]="compareCategories">
+        <mat-option
+          *ngFor="let category of categories"
+          [value]="category.name"
+          [disabled]="
+            compareCategories(currentlySelectedCategory, category.name)
+          "
+        >
+          {{ category.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-error
+      *ngIf="
+        createTaskForm.get('category')!.errors?.required &&
+        createTaskForm.get('category')!.touched
+      "
+      >Category is required</mat-error
+    >
+
+    <div>
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        class="mt-5"
+        [disabled]="!createTaskForm.valid"
+      >
+        Create
+      </button>
+    </div>
+  </form>
+</ng-container>
+
+<ng-template #loader>
+  <mat-progress-spinner
+    [color]="'primary'"
+    [mode]="'indeterminate'"
+    [value]="50"
+  >
+  </mat-progress-spinner>
+</ng-template>
