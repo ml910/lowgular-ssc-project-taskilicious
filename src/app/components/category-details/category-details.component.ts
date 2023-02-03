@@ -4,7 +4,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Observable, switchMap } from 'rxjs';
+import { combineLatest, filter, map, Observable, switchMap } from 'rxjs';
+import { TaskModel } from 'src/app/models/task.model';
 import { CategoryModel } from '../../models/category.model';
 import { CategoriesService } from '../../services/categories.service';
 
@@ -21,10 +22,24 @@ export class CategoryDetailsComponent {
     private _activatedRoute: ActivatedRoute
   ) {}
 
+  readonly tasksTableColumns: string[] = ['Name', 'Category ID'];
+
   readonly categoryDetails$: Observable<CategoryModel> =
     this._activatedRoute.params.pipe(
       switchMap((params: Params) =>
         this._categoriesService.getOneById(params['categoryId'])
       )
     );
+
+  readonly categoryTasks$: Observable<TaskModel[]> =
+    this._categoriesService.getAllTasks();
+
+  readonly tasksInCategory$: Observable<TaskModel[]> = combineLatest([
+    this.categoryTasks$,
+    this._activatedRoute.params,
+  ]).pipe(
+    map(([tasks, route]) => {
+      return tasks.filter((task) => task.categoryId === route['categoryId']);
+    })
+  );
 }

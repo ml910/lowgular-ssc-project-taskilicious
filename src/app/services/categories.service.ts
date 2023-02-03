@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CategoryModel } from '../models/category.model';
+import { TaskModel } from '../models/task.model';
 
 @Injectable({ providedIn: 'root' })
 export class CategoriesService {
@@ -32,6 +33,12 @@ export class CategoriesService {
     return this._httpClient.put<CategoryModel>(
       `https://63761992b5f0e1eb850298da.mockapi.io/categories/${category.id}`,
       category
+    );
+  }
+
+  getAllTasks(): Observable<TaskModel[]> {
+    return this._httpClient.get<TaskModel[]>(
+      `https://63761992b5f0e1eb850298da.mockapi.io/tasks`
     );
   }
 }

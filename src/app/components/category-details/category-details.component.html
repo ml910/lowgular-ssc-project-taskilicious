@@ -3,6 +3,28 @@
   <span class="capitalize">{{ category.name }}</span></ng-container
 >
 
+<ng-container *ngIf="tasksInCategory$ | async as tasks">
+  <table class="mat-elevation-z8" [dataSource]="tasks" mat-table>
+    <!-- Column 1 -->
+    <ng-container [matColumnDef]="tasksTableColumns[0]">
+      <th *matHeaderCellDef mat-header-cell>
+        {{ tasksTableColumns[0].valueOf() }}
+      </th>
+      <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
+    </ng-container>
+    <!-- Column 2 -->
+    <ng-container [matColumnDef]="tasksTableColumns[1]">
+      <th *matHeaderCellDef mat-header-cell>
+        {{ tasksTableColumns[1].valueOf() }}
+      </th>
+      <td *matCellDef="let element" mat-cell>{{ element.categoryId }}</td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="tasksTableColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: tasksTableColumns" mat-row></tr>
+  </table>
+</ng-container>
+
 <ng-template #loader>
   <mat-progress-spinner
     [color]="'primary'"
