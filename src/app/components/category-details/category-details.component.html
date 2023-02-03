@@ -4,29 +4,31 @@
 >
 
 <ng-container *ngIf="tasksInCategory$ | async as tasks">
-  <table class="mat-elevation-z8 mt-10" [dataSource]="tasks" mat-table>
-    <!-- Column 1 -->
-    <ng-container [matColumnDef]="tasksTableColumns[0]">
-      <th *matHeaderCellDef mat-header-cell>
-        {{ tasksTableColumns[0].valueOf() }}
-      </th>
-      <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
-    </ng-container>
-    <!-- Column 2 -->
-    <ng-container [matColumnDef]="tasksTableColumns[1]">
-      <th *matHeaderCellDef mat-header-cell>
-        {{ tasksTableColumns[1].valueOf() }}
-      </th>
-      <td *matCellDef="let element" mat-cell>
-        <p class="flex flex-col items-center justify-center mb-0">
-          {{ element.categoryId }}
-        </p>
-      </td>
-    </ng-container>
+  <ng-container *ngIf="tasks.length > 0; else noTasks">
+    <table class="mat-elevation-z8 mt-10" [dataSource]="tasks" mat-table>
+      <!-- Column 1 -->
+      <ng-container [matColumnDef]="tasksTableColumns[0]">
+        <th *matHeaderCellDef mat-header-cell>
+          {{ tasksTableColumns[0].valueOf() }}
+        </th>
+        <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
+      </ng-container>
+      <!-- Column 2 -->
+      <ng-container [matColumnDef]="tasksTableColumns[1]">
+        <th *matHeaderCellDef mat-header-cell>
+          {{ tasksTableColumns[1].valueOf() }}
+        </th>
+        <td *matCellDef="let element" mat-cell>
+          <p class="flex flex-col items-center justify-center mb-0">
+            {{ element.categoryId }}
+          </p>
+        </td>
+      </ng-container>
 
-    <tr *matHeaderRowDef="tasksTableColumns" mat-header-row></tr>
-    <tr *matRowDef="let row; columns: tasksTableColumns" mat-row></tr>
-  </table>
+      <tr *matHeaderRowDef="tasksTableColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: tasksTableColumns" mat-row></tr>
+    </table>
+  </ng-container>
 </ng-container>
 
 <div>
@@ -47,4 +49,12 @@
     [value]="50"
   >
   </mat-progress-spinner>
+</ng-template>
+
+<ng-template #noTasks>
+  <div
+    class="border-2 border-solid border-slate-200 p-4 m-10 flex flex-col items-center justify-items-center"
+  >
+    Sorry, there are no tasks to be shown in this category
+  </div>
 </ng-template>
