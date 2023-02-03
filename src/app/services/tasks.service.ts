@@ -19,4 +19,10 @@ export class TasksService {
       task
     );
   }
+
+  removeTaskById(categoryId: string, taskId: string): Observable<void> {
+    return this._httpClient.delete<void>(
+      `https://63761992b5f0e1eb850298da.mockapi.io/tasks/${taskId}`
+    );
+  }
 }
