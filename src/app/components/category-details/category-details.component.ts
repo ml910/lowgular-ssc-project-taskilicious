@@ -6,6 +6,7 @@ import {
 import { ActivatedRoute, Params } from '@angular/router';
 import { combineLatest, filter, map, Observable, switchMap } from 'rxjs';
 import { TaskModel } from 'src/app/models/task.model';
+import { TasksService } from 'src/app/services/tasks.service';
 import { CategoryModel } from '../../models/category.model';
 import { CategoriesService } from '../../services/categories.service';
 
@@ -19,6 +20,7 @@ import { CategoriesService } from '../../services/categories.service';
 export class CategoryDetailsComponent {
   constructor(
     private _categoriesService: CategoriesService,
+    private _tasksService: TasksService,
     private _activatedRoute: ActivatedRoute
   ) {}
 
@@ -32,7 +34,7 @@ export class CategoryDetailsComponent {
     );
 
   readonly categoryTasks$: Observable<TaskModel[]> =
-    this._categoriesService.getAllTasks();
+    this._tasksService.getAllTasks();
 
   // combineLatest and not SwitchMap because:
   // 1. The GET method from the service does not return tasks by categoryID (then we would have used switchMap)

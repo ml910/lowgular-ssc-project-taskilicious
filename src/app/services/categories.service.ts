@@ -35,10 +35,4 @@ export class CategoriesService {
       category
     );
   }
-
-  getAllTasks(): Observable<TaskModel[]> {
-    return this._httpClient.get<TaskModel[]>(
-      `https://63761992b5f0e1eb850298da.mockapi.io/tasks`
-    );
-  }
 }
