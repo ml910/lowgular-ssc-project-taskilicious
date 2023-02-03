@@ -34,6 +34,10 @@ export class CategoryDetailsComponent {
   readonly categoryTasks$: Observable<TaskModel[]> =
     this._categoriesService.getAllTasks();
 
+  // combineLatest and not SwitchMap because:
+  // 1. The GET method from the service does not return tasks by categoryID (then we would have used switchMap)
+  // 2. You need to get both tasks and the route data, but you do not want to do it separately
+  // 3. All other array options would return TaskModel and not TaskModel[]
   readonly tasksInCategory$: Observable<TaskModel[]> = combineLatest([
     this.categoryTasks$,
     this._activatedRoute.params,
