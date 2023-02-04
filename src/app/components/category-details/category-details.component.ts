@@ -3,7 +3,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Route, Router } from '@angular/router';
 import {
   BehaviorSubject,
   combineLatest,
@@ -29,10 +29,17 @@ export class CategoryDetailsComponent {
   constructor(
     private _categoriesService: CategoriesService,
     private _tasksService: TasksService,
+    private _router: Router,
     private _activatedRoute: ActivatedRoute
   ) {}
 
-  readonly tasksTableColumns: string[] = ['Name', 'Category ID', 'Remove'];
+  readonly tasksTableColumns: string[] = [
+    'Image',
+    'Name',
+    'Category ID',
+    'Edit',
+    'Remove',
+  ];
 
   readonly categoryDetails$: Observable<CategoryModel> =
     this._activatedRoute.params.pipe(
@@ -77,6 +84,10 @@ export class CategoryDetailsComponent {
         )
     )
   );
+
+  editTaskById(taskId: string): void {
+    this._router.navigate([taskId], { relativeTo: this._activatedRoute });
+  }
 
   removeTaskById(categoryId: string, taskId: string): void {
     this._tasksService

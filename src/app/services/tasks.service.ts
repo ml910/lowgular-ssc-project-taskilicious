@@ -25,4 +25,17 @@ export class TasksService {
       `https://63761992b5f0e1eb850298da.mockapi.io/tasks/${taskId}`
     );
   }
+
+  editTaskById(categoryId: string, task: TaskModel): Observable<TaskModel> {
+    return this._httpClient.put<TaskModel>(
+      `https://63761992b5f0e1eb850298da.mockapi.io/tasks/${task.id}`,
+      task
+    );
+  }
+
+  getOneById(taskId: string): Observable<TaskModel> {
+    return this._httpClient.get<TaskModel>(
+      `https://63761992b5f0e1eb850298da.mockapi.io/tasks/${taskId}`
+    );
+  }
 }

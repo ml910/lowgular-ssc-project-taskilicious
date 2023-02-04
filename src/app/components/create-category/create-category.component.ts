@@ -6,6 +6,7 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take, tap } from 'rxjs';
+import { CustomValidators } from 'src/app/custom-validators.enum';
 import { CategoriesService } from 'src/app/services/categories.service';
 
 @Component({
@@ -26,7 +27,7 @@ export class CreateCategoryComponent {
     name: new FormControl('', [
       Validators.required,
       // TODO: Normally this would be in a separate directory for re-usable validators
-      Validators.pattern('^[a-zA-Z ]*$'),
+      Validators.pattern(CustomValidators.LETTERS_ONLY),
     ]),
   });
 

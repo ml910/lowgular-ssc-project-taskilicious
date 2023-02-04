@@ -6,6 +6,7 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { concatMap, Observable, take } from 'rxjs';
+import { CustomValidators } from 'src/app/custom-validators.enum';
 import { TasksService } from 'src/app/services/tasks.service';
 import { CategoryModel } from '../../models/category.model';
 import { CategoriesService } from '../../services/categories.service';
@@ -28,7 +29,7 @@ export class CreateTaskComponent {
     // TODO: Move the letter-only validator pattern to a separate directory
     name: new FormControl('', [
       Validators.required,
-      Validators.pattern('^[a-zA-Z ]*$'),
+      Validators.pattern(CustomValidators.LETTERS_ONLY),
     ]),
     category: new FormControl('', [Validators.required]),
   });
