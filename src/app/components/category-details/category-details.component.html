@@ -1,7 +1,68 @@
 <ng-container *ngIf="categoryDetails$ | async as category; else loader"
   >Welcome to category:
-  <span class="capitalize">{{ category.name }}</span></ng-container
->
+  <span class="capitalize">{{ category.name }}</span>
+
+  <ng-container *ngIf="tasksInCategory$ | async as tasks">
+    <ng-container *ngIf="tasks.length > 0; else noTasks">
+      <table class="mat-elevation-z8 mt-10" [dataSource]="tasks" mat-table>
+        <!-- Column 1 -->
+        <ng-container [matColumnDef]="tasksTableColumns[0]">
+          <th *matHeaderCellDef mat-header-cell>
+            {{ tasksTableColumns[0].valueOf() }}
+          </th>
+          <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
+        </ng-container>
+        <!-- Column 2 -->
+        <ng-container [matColumnDef]="tasksTableColumns[1]">
+          <th *matHeaderCellDef mat-header-cell>
+            {{ tasksTableColumns[1].valueOf() }}
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <p class="flex flex-col items-center justify-center mb-0">
+              {{ element.categoryId }}
+            </p>
+          </td>
+        </ng-container>
+
+        <ng-container [matColumnDef]="tasksTableColumns[2]">
+          <th *matHeaderCellDef mat-header-cell class="px-10">
+            {{ tasksTableColumns[2].valueOf() }}
+          </th>
+          <td *matCellDef="let element" mat-cell class="pr-0">
+            <div class="flex flex-col items-center justify-center mb-0">
+              <button
+                mat-mini-fab
+                color="accent"
+                class="hover:scale-110 will-change-transform transition-transform"
+                (click)="removeTaskById(category.id, element.id)"
+              >
+                <mat-icon>remove</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="tasksTableColumns" mat-header-row></tr>
+        <tr
+          *matRowDef="let row; columns: tasksTableColumns"
+          mat-row
+          class="h-16"
+        ></tr>
+      </table>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<div>
+  <button
+    mat-fab
+    class="mt-5 mt-5 fixed right-10 bottom-10 hover:bg-primary-700 hover:scale-110 will-change-transform transition-colors transition-transform"
+    color="primary"
+    [routerLink]="'../../tasks/create'"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
 
 <ng-template #loader>
   <mat-progress-spinner
@@ -10,4 +71,12 @@
     [value]="50"
   >
   </mat-progress-spinner>
+</ng-template>
+
+<ng-template #noTasks>
+  <div
+    class="border-2 border-solid border-slate-200 p-4 m-10 flex flex-col items-center justify-items-center"
+  >
+    Sorry, there are no tasks to be shown in this category
+  </div>
 </ng-template>
