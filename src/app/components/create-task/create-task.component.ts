@@ -32,7 +32,7 @@ export class CreateTaskComponent {
   readonly createTaskForm: FormGroup = new FormGroup({
     name: new FormControl('', [
       Validators.required,
-      Validators.pattern(CustomValidators.LETTERS_ONLY),
+      // Validators.pattern(CustomValidators.LETTERS_ONLY),
     ]),
     category: new FormControl('', [Validators.required]),
     teamMemberIds: new FormArray([]),
@@ -53,25 +53,33 @@ export class CreateTaskComponent {
   }
 
   addMemberToArrayOrRemoveMemberFromArray(memberId: string): void {
-    if (
-      !this.createTaskForm.controls?.teamMemberIds?.value.includes(memberId)
-    ) {
-      this.createTaskForm.controls.teamMemberIds.value.push(
-        new FormControl(memberId).value
-      );
+    if (!this.teamMembersFormArray.value.includes(memberId)) {
+      this.teamMembersFormArray.push(new FormControl(memberId));
 
       console.log('ID added: ', memberId);
     } else {
       this.removeAtIndex(+memberId);
     }
 
-    // If I select only, everything goes well
-    // If I unselect one, the array === []
-    console.log(this.createTaskForm.controls?.teamMemberIds?.value);
+    console.log(
+      'Team Members control value: ',
+      this.createTaskForm.controls?.teamMemberIds?.value
+    );
+    console.log(
+      'length: ',
+      this.createTaskForm.controls?.teamMemberIds?.value.length
+    );
+    console.log(
+      'All team members controls inside the form: ',
+      this.createTaskForm.controls.teamMemberIds
+    );
   }
 
   removeAtIndex(memberId: number): void {
-    this.teamMembersFormArray.removeAt(memberId);
+    this.teamMembersFormArray.controls.findIndex((control) => {
+      // Works fine when clicking in order, does not when clicking randomly
+      this.teamMembersFormArray.removeAt(memberId - 1);
+    });
     console.log('removed member ID: ', memberId);
   }
 
