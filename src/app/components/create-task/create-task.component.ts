@@ -75,6 +75,7 @@ export class CreateTaskComponent {
     );
   }
 
+  // TODO: Come back to it when there is free time left - already spent far too much time on this one
   removeAtIndex(memberId: number): void {
     this.teamMembersFormArray.controls.findIndex((control) => {
       // Works fine when clicking in order, does not when clicking randomly
