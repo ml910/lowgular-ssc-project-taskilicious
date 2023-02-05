@@ -52,13 +52,24 @@ export class CreateTaskComponent {
     return this.createTaskForm.get('teamMemberIds') as FormArray;
   }
 
+  // Chose 1,2,3 - no problems
+  // Chose 1,2,3, removed 3 - no problems
+  // Chose 1 removed 1 - no problems
+  // Chose 1,2 removed 1 - no problems
+  // Chose 1,2,3 removed 2 added 5 - we have a problem, getting 1,3,5
+  // Chose 1,2,3 removed 1 added 5,6 removed 5 - we have a problem, got 1,
   addMemberToArrayOrRemoveMemberFromArray(memberId: string): void {
     if (!this.teamMembersFormArray.value.includes(memberId)) {
       this.teamMembersFormArray.push(new FormControl(memberId));
 
       console.log('ID added: ', memberId);
     } else {
-      this.removeAtIndex(+memberId);
+      if (this.teamMembersFormArray.controls.length === 1) {
+        this.teamMembersFormArray.clear();
+      }
+
+      this.teamMembersFormArray.removeAt(+memberId - 1);
+      console.log('typeof +memberId: ', typeof +memberId); // Number
     }
 
     console.log(
@@ -73,15 +84,6 @@ export class CreateTaskComponent {
       'All team members controls inside the form: ',
       this.createTaskForm.controls.teamMemberIds
     );
-  }
-
-  // TODO: Come back to it when there is free time left - already spent far too much time on this one
-  removeAtIndex(memberId: number): void {
-    this.teamMembersFormArray.controls.findIndex((control) => {
-      // Works fine when clicking in order, does not when clicking randomly
-      this.teamMembersFormArray.removeAt(memberId - 1);
-    });
-    console.log('removed member ID: ', memberId);
   }
 
   compareCategories(a: string, b: CategoryModel): boolean {
