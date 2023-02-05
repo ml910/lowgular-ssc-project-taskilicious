@@ -52,6 +52,7 @@ export class CreateTaskComponent {
     return this.createTaskForm.get('teamMemberIds') as FormArray;
   }
 
+  // TODO: weird, weird things are happening here. The more you click the less reliable this function becomes.
   // Chose 1,2,3 -
   // Chose 1,2,3, removed 3 - no problems
   // Chose 1 removed 1 - no problems
