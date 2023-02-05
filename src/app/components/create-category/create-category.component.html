@@ -8,7 +8,6 @@
     <mat-form-field appearance="outline" class="mb-5"
       ><mat-label>Name</mat-label
       ><input matInput type="text" placeholder="Name" formControlName="name" />
-      <!--  TODO: Add proper validation  -->
       <mat-error *ngIf="!createCategoryForm.get('name')!.errors?.required"
         >Please use letters only</mat-error
       >

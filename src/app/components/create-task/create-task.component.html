@@ -52,12 +52,25 @@
 
       <h3 class="mb-5 mt-8">Choose Team Members:</h3>
 
+      <!-- <div class="flex">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          [disabled]="teamMembersArray === []"
+        >
+          Remove All Members
+        </button>
+      </div> -->
+
+      <!-- TODO: Connect to a FormArray -->
       <ng-container *ngIf="teamMembers$ | async as members; else loader">
         <mat-selection-list role="list" class="flex items-center flex-wrap"
           ><mat-list-option
             role="listitem"
             class="max-w-xs border border-gray-400 border-solid h-16 m-px"
             *ngFor="let teamMember of members"
+            (click)="addMemberToArrayOrRemoveMemberFromArray(teamMember.id)"
           >
             <div class="flex flex-row items-center">
               <img

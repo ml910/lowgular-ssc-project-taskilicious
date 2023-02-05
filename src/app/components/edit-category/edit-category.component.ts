@@ -28,7 +28,6 @@ export class EditCategoryComponent {
   readonly categoryEditForm: FormGroup = new FormGroup({
     name: new FormControl('', [
       Validators.required,
-      // TODO: Move this to a shared directory - this has been used more than once
       Validators.pattern(CustomValidators.LETTERS_ONLY),
     ]),
   });
