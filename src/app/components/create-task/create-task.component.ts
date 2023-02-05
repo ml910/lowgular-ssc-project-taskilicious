@@ -52,21 +52,21 @@ export class CreateTaskComponent {
     return this.createTaskForm.get('teamMemberIds') as FormArray;
   }
 
-  // Chose 1,2,3 - no problems
+  // Chose 1,2,3 -
   // Chose 1,2,3, removed 3 - no problems
   // Chose 1 removed 1 - no problems
   // Chose 1,2 removed 1 - no problems
-  // Chose 1,2,3 removed 2 added 5 - we have a problem, getting 1,3,5
-  // Chose 1,2,3 removed 1 added 5,6 removed 5 - we have a problem, got 1,
+  // Chose 1,2,3 removed 2 added 5 - works good!
+  // Chose 1,2,3 removed 1 added 5,6 removed 5 - we have a problem, got 2,3,5,6
   addMemberToArrayOrRemoveMemberFromArray(memberId: string): void {
     if (!this.teamMembersFormArray.value.includes(memberId)) {
       this.teamMembersFormArray.push(new FormControl(memberId));
 
       console.log('ID added: ', memberId);
     } else {
-      if (this.teamMembersFormArray.controls.length === 1) {
-        this.teamMembersFormArray.clear();
-      }
+      // if (this.teamMembersFormArray.controls.length === 1) {
+      //   this.teamMembersFormArray.clear();
+      // }
 
       this.teamMembersFormArray.removeAt(+memberId - 1);
       console.log('typeof +memberId: ', typeof +memberId); // Number
