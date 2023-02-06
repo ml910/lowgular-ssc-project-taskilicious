@@ -32,7 +32,7 @@ export class CreateTaskComponent {
   readonly createTaskForm: FormGroup = new FormGroup({
     name: new FormControl('', [
       Validators.required,
-      // Validators.pattern(CustomValidators.LETTERS_ONLY),
+      Validators.pattern(CustomValidators.LETTERS_ONLY),
     ]),
     category: new FormControl('', [Validators.required]),
     teamMemberIds: new FormArray([]),

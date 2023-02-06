@@ -1,8 +1,8 @@
-<ng-container *ngIf="categoryDetails$ | async as category; else loader"
+<ng-container *ngIf="categoryDetails$ | async as category; else smallLoader"
   >Welcome to category:
   <span class="capitalize">{{ category.name }}</span>
 
-  <ng-container *ngIf="tasksInCategory$ | async as tasks">
+  <ng-container *ngIf="tasksInCategory$ | async as tasks; else loader">
     <ng-container *ngIf="tasks.length > 0; else noTasks">
       <table class="mat-elevation-z8 mt-10" [dataSource]="tasks" mat-table>
         <ng-container [matColumnDef]="tasksTableColumns[0]">
@@ -119,6 +119,16 @@
     <mat-icon>add</mat-icon>
   </button>
 </div>
+
+<ng-template #smallLoader>
+  <mat-progress-spinner
+    [color]="'primary'"
+    [mode]="'indeterminate'"
+    [value]="50"
+    [diameter]="25"
+  >
+  </mat-progress-spinner>
+</ng-template>
 
 <ng-template #loader>
   <mat-progress-spinner

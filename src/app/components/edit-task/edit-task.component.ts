@@ -4,13 +4,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { concatMap, switchMap, take, tap } from 'rxjs/operators';
-import { CategoryModel } from '../../models/category.model';
+import { TeamMemberModel } from '../../models/team-member.model';
 import { TasksService } from '../../services/tasks.service';
 import { CategoriesService } from '../../services/categories.service';
+import { TeamMembersService } from '../../services/team-members.service';
 import { TaskModel } from '../../models/task.model';
+import { CategoryModel } from '../../models/category.model';
 import { CustomValidators } from 'src/app/custom-validators.enum';
 
 @Component({
@@ -25,7 +27,8 @@ export class EditTaskComponent {
     private _tasksService: TasksService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _categoriesService: CategoriesService
+    private _categoriesService: CategoriesService,
+    private _teamMembersService: TeamMembersService
   ) {}
 
   readonly editTaskForm: FormGroup = new FormGroup({
@@ -34,6 +37,7 @@ export class EditTaskComponent {
       Validators.pattern(CustomValidators.LETTERS_ONLY),
     ]),
     category: new FormControl('', Validators.required),
+    teamMemberIds: new FormArray([]),
   });
 
   readonly task$: Observable<TaskModel> = this._activatedRoute.params.pipe(
@@ -44,12 +48,34 @@ export class EditTaskComponent {
       this.editTaskForm.patchValue({
         name: taskDetails.name,
         category: taskDetails.categoryId,
+        teamMemberIds: taskDetails.teamMemberIds,
       });
     })
   );
 
   readonly availableCategories$: Observable<CategoryModel[]> =
     this._categoriesService.getAllCategories();
+
+  readonly teamMembers$: Observable<TeamMemberModel[]> =
+    this._teamMembersService.getAllTeamMembers();
+
+  get teamMembersFormArray(): FormArray {
+    return this.editTaskForm.get('teamMemberIds') as FormArray;
+  }
+
+  // TODO: Adjust
+  checkIfSelected(memberId: string): boolean {
+    return this.teamMembersFormArray.value.includes(memberId) ? true : false;
+  }
+
+  // Same problem as when creating a task
+  addMemberToArrayOrRemoveMemberFromArray(memberId: string): void {
+    if (!this.teamMembersFormArray.value.includes(memberId)) {
+      this.teamMembersFormArray.push(new FormControl(memberId));
+    } else {
+      this.teamMembersFormArray.removeAt(+memberId - 1);
+    }
+  }
 
   onEditTaskFormSubmitted(editTaskForm: FormGroup): void {
     if (editTaskForm.valid) {
@@ -62,6 +88,7 @@ export class EditTaskComponent {
                 name: editTaskForm.controls.name.value,
                 categoryId: editTaskForm.controls.category.value,
                 id: params['taskId'],
+                teamMemberIds: editTaskForm.controls.teamMemberIds.value,
               }
             )
           ),
