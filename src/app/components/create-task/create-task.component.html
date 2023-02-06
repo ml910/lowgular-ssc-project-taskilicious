@@ -1,3 +1,5 @@
+<h1>Create Task</h1>
+
 <ng-container *ngIf="categories$ | async as categories; else loader">
   <ng-container *ngIf="categories.length > 0; else noTasks">
     <form
@@ -12,7 +14,6 @@
             type="text"
             placeholder="Name"
             formControlName="name"
-            required
           /><mat-error *ngIf="createTaskForm.get('name')!.errors?.required"
             >Name is required</mat-error
           >
@@ -39,21 +40,45 @@
               {{ category.name }}
             </mat-option>
           </mat-select>
+          <mat-error
+            *ngIf="
+              createTaskForm.get('category')!.errors?.required &&
+              createTaskForm.get('category')!.touched
+            "
+            >Category is required</mat-error
+          >
         </mat-form-field>
       </div>
-      <mat-error
-        *ngIf="
-          createTaskForm.get('category')!.errors?.required &&
-          createTaskForm.get('category')!.touched
-        "
-        >Category is required</mat-error
-      >
+
+      <h3 class="mb-5 mt-8">Choose Team Members:</h3>
+
+      <ng-container *ngIf="teamMembers$ | async as members; else loader">
+        <mat-selection-list
+          role="list"
+          class="flex items-center flex-wrap"
+          formArrayName="teamMemberIds"
+          ><mat-list-option
+            role="listitem"
+            class="max-w-xs border border-gray-400 border-solid h-16 m-px"
+            *ngFor="let teamMember of members"
+            (click)="addMemberToArrayOrRemoveMemberFromArray(teamMember.id)"
+          >
+            <div class="flex flex-row items-center">
+              <img
+                [src]="teamMember.avatar || '../../../assets/no-image.png'"
+                class="h-10 w-10 mr-2 rounded-md"
+              />
+              <span>{{ teamMember.name }}</span>
+            </div>
+          </mat-list-option></mat-selection-list
+        >
+      </ng-container>
 
       <button
         type="submit"
         mat-raised-button
         color="primary"
-        class="mt-5"
+        class="mt-10"
         [disabled]="!createTaskForm.valid"
       >
         Create

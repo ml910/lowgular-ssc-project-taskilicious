@@ -1,3 +1,5 @@
+<h1>Edit Category</h1>
+
 <ng-container *ngIf="category$ | async as category; else loader">
   <form
     [formGroup]="categoryEditForm"
@@ -11,7 +13,6 @@
           type="text"
           placeholder="Name"
           formControlName="name"
-          required
         />
         <mat-error *ngIf="!categoryEditForm.get('name')!.errors?.required"
           >Please use letters only</mat-error

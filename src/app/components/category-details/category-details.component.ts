@@ -3,20 +3,15 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import {
-  BehaviorSubject,
-  combineLatest,
-  filter,
-  map,
-  Observable,
-  Subject,
-  switchMap,
-} from 'rxjs';
-import { TaskModel } from 'src/app/models/task.model';
-import { TasksService } from 'src/app/services/tasks.service';
-import { CategoryModel } from '../../models/category.model';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { TeamMemberModel } from '../../models/team-member.model';
 import { CategoriesService } from '../../services/categories.service';
+import { TasksService } from '../../services/tasks.service';
+import { TeamMembersService } from '../../services/team-members.service';
+import { CategoryModel } from '../../models/category.model';
+import { TaskModel } from '../../models/task.model';
 
 @Component({
   selector: 'app-category-details',
@@ -29,10 +24,19 @@ export class CategoryDetailsComponent {
   constructor(
     private _categoriesService: CategoriesService,
     private _tasksService: TasksService,
-    private _activatedRoute: ActivatedRoute
+    private _router: Router,
+    private _activatedRoute: ActivatedRoute,
+    private _teamMembersService: TeamMembersService
   ) {}
 
-  readonly tasksTableColumns: string[] = ['Name', 'Category ID', 'Remove'];
+  readonly tasksTableColumns: string[] = [
+    'Image',
+    'Name',
+    'Category ID',
+    'Team Members',
+    'Edit',
+    'Remove',
+  ];
 
   readonly categoryDetails$: Observable<CategoryModel> =
     this._activatedRoute.params.pipe(
@@ -56,6 +60,16 @@ export class CategoryDetailsComponent {
   public tasksRefresh$: Observable<void> =
     this.tasksRefreshSubject.asObservable();
 
+  private _teamMembersSubject: BehaviorSubject<TeamMemberModel[]> =
+    new BehaviorSubject<TeamMemberModel[]>([]);
+
+  // TODO: Match members to tasks by teamMemberId
+  readonly teamMembers$: Observable<TeamMemberModel[]> =
+    this._teamMembersSubject.asObservable().pipe(
+      switchMap(() => this._teamMembersService.getAllTeamMembers()),
+      shareReplay(1)
+    );
+
   // combineLatest and not SwitchMap because:
   // 1. The GET method from the service does not return tasks by categoryID (then we would have used switchMap)
   // 2. You need to get both tasks and the route data, but you do not want to do it separately
@@ -67,16 +81,25 @@ export class CategoryDetailsComponent {
     this.categoryTasks$,
     this._activatedRoute.params,
   ]).pipe(
-    switchMap(([refresh, tasks, route]) =>
-      this._tasksService
-        .getAllTasks()
-        .pipe(
-          map((tasks) =>
-            tasks.filter((task) => task.categoryId === route['categoryId'])
-          )
-        )
-    )
+    switchMap(([refresh, tasks, route]) => {
+      return this._tasksService.getAllTasks().pipe(
+        map((tasks) => {
+          const tasksInCategory = tasks.filter(
+            (task) => task.categoryId === route['categoryId']
+          );
+
+          return tasksInCategory.filter(
+            // In case teamMemberIds is null/undefined, return []
+            (filTask) => filTask.teamMemberIds ?? []
+          );
+        })
+      );
+    })
   );
+
+  editTaskById(taskId: string): void {
+    this._router.navigate([taskId], { relativeTo: this._activatedRoute });
+  }
 
   removeTaskById(categoryId: string, taskId: string): void {
     this._tasksService

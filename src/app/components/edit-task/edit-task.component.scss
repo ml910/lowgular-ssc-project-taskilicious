@@ -1,0 +1,5 @@
+// TODO: 'It works' but it looks like cancer - fix it later
+// Global style by element would probably be best
+::ng-deep .mat-form-field-infix input {
+  text-overflow: ellipsis;
+}

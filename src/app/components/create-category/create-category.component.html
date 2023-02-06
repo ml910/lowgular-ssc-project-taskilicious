@@ -1,3 +1,5 @@
+<h1>Create Category</h1>
+
 <form
   [formGroup]="createCategoryForm"
   (ngSubmit)="onCreateCategoryFormSubmitted(createCategoryForm)"
@@ -5,14 +7,7 @@
   <div>
     <mat-form-field appearance="outline" class="mb-5"
       ><mat-label>Name</mat-label
-      ><input
-        matInput
-        type="text"
-        placeholder="Name"
-        formControlName="name"
-        required
-      />
-      <!--  TODO: Add proper validation  -->
+      ><input matInput type="text" placeholder="Name" formControlName="name" />
       <mat-error *ngIf="!createCategoryForm.get('name')!.errors?.required"
         >Please use letters only</mat-error
       >

@@ -4,11 +4,10 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatListModule } from '@angular/material/list';
-import { CreateTaskComponent } from './create-task.component';
+import { EditTaskComponent } from './edit-task.component';
 
 @NgModule({
   imports: [
@@ -17,13 +16,12 @@ import { CreateTaskComponent } from './create-task.component';
     MatInputModule,
     CommonModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatOptionModule,
-    MatProgressSpinnerModule,
-    MatListModule,
   ],
-  declarations: [CreateTaskComponent],
+  declarations: [EditTaskComponent],
   providers: [],
-  exports: [CreateTaskComponent],
+  exports: [EditTaskComponent],
 })
-export class CreateTaskComponentModule {}
+export class EditTaskComponentModule {}

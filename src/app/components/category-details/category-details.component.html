@@ -5,17 +5,31 @@
   <ng-container *ngIf="tasksInCategory$ | async as tasks">
     <ng-container *ngIf="tasks.length > 0; else noTasks">
       <table class="mat-elevation-z8 mt-10" [dataSource]="tasks" mat-table>
-        <!-- Column 1 -->
         <ng-container [matColumnDef]="tasksTableColumns[0]">
-          <th *matHeaderCellDef mat-header-cell>
+          <!-- Image -->
+          <th *matHeaderCellDef mat-header-cell class="pr-8">
             {{ tasksTableColumns[0].valueOf() }}
           </th>
-          <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
+          <td *matCellDef="let element" mat-cell>
+            <img
+              [src]="element.imageUrl || '../../../assets/no-image.png'"
+              class="h-8 w-8"
+            />
+          </td>
         </ng-container>
-        <!-- Column 2 -->
+
+        <!-- Name -->
         <ng-container [matColumnDef]="tasksTableColumns[1]">
           <th *matHeaderCellDef mat-header-cell>
             {{ tasksTableColumns[1].valueOf() }}
+          </th>
+          <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
+        </ng-container>
+
+        <!-- Category ID -->
+        <ng-container [matColumnDef]="tasksTableColumns[2]">
+          <th *matHeaderCellDef mat-header-cell>
+            {{ tasksTableColumns[2].valueOf() }}
           </th>
           <td *matCellDef="let element" mat-cell>
             <p class="flex flex-col items-center justify-center mb-0">
@@ -24,11 +38,53 @@
           </td>
         </ng-container>
 
-        <ng-container [matColumnDef]="tasksTableColumns[2]">
-          <th *matHeaderCellDef mat-header-cell class="px-10">
-            {{ tasksTableColumns[2].valueOf() }}
+        <!-- Team Members -->
+        <ng-container
+          [matColumnDef]="tasksTableColumns[3]"
+          *ngIf="teamMembers$ | async as members"
+        >
+          <th *matHeaderCellDef mat-header-cell class="pr-8">
+            {{ tasksTableColumns[3].valueOf() }}
           </th>
-          <td *matCellDef="let element" mat-cell class="pr-0">
+          <td *matCellDef="let element" mat-cell>
+            <div class="flex flex-row">
+              <ng-container>
+                <!-- TODO: Now get the images only per task in which they actually appear, not all member avatars ever like now -->
+                <img
+                  *ngFor="let member of members"
+                  [src]="member.avatar || '../../../assets/no-image.png'"
+                  class="h-8 w-8 mr-2"
+                />
+              </ng-container>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Edit -->
+        <ng-container [matColumnDef]="tasksTableColumns[4]">
+          <th *matHeaderCellDef mat-header-cell class="px-16">
+            {{ tasksTableColumns[4].valueOf() }}
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <div class="flex flex-col items-center justify-center mb-0">
+              <button
+                mat-mini-fab
+                color="accent"
+                class="hover:scale-110 will-change-transform transition-transform"
+                [routerLink]="'../../tasks/edit/' + element.id"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Remove -->
+        <ng-container [matColumnDef]="tasksTableColumns[5]">
+          <th *matHeaderCellDef mat-header-cell class="pr-8">
+            {{ tasksTableColumns[5].valueOf() }}
+          </th>
+          <td *matCellDef="let element" mat-cell>
             <div class="flex flex-col items-center justify-center mb-0">
               <button
                 mat-mini-fab
@@ -56,7 +112,7 @@
 <div>
   <button
     mat-fab
-    class="mt-5 mt-5 fixed right-10 bottom-10 hover:bg-primary-700 hover:scale-110 will-change-transform transition-colors transition-transform"
+    class="mt-5 fixed right-10 bottom-10 hover:bg-primary-700 hover:scale-110 will-change-transform transition-colors transition-transform"
     color="primary"
     [routerLink]="'../../tasks/create'"
   >

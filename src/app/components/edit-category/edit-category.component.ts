@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { CategoriesService } from '../../services/categories.service';
 import { CategoryModel } from '../../models/category.model';
+import { CustomValidators } from 'src/app/custom-validators.enum';
 
 @Component({
   selector: 'app-edit-category',
@@ -27,8 +28,7 @@ export class EditCategoryComponent {
   readonly categoryEditForm: FormGroup = new FormGroup({
     name: new FormControl('', [
       Validators.required,
-      // TODO: Move this to a shared directory - this has been used more than once
-      Validators.pattern('^[a-zA-Z ]*$'),
+      Validators.pattern(CustomValidators.LETTERS_ONLY),
     ]),
   });
 
@@ -45,16 +45,16 @@ export class EditCategoryComponent {
     );
 
   onCategoryEditFormSubmitted(categoryEditForm: FormGroup): void {
-    if (this.categoryEditForm.valid) {
+    if (categoryEditForm.valid) {
       this._activatedRoute.params
         .pipe(
-          take(1),
           switchMap((params: Params) =>
             this._categoriesService.updateById({
               ...categoryEditForm.value,
               id: params['categoryId'],
             })
-          )
+          ),
+          take(1)
         )
         .subscribe(() =>
           this._router.navigate(['../..'], { relativeTo: this._activatedRoute })
