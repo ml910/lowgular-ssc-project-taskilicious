@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { TeamMemberModel } from '../../models/team-member.model';
 import { CategoriesService } from '../../services/categories.service';
 import { TasksService } from '../../services/tasks.service';
@@ -80,18 +80,21 @@ export class CategoryDetailsComponent {
     // Here is it connected to a BE operation - and only then it actually DOES something
     this.categoryTasks$,
     this._activatedRoute.params,
+    this.teamMembers$,
   ]).pipe(
-    switchMap(([refresh, tasks, route]) => {
+    switchMap(([refresh, tasks, route, members]) => {
       return this._tasksService.getAllTasks().pipe(
-        map((tasks) => {
-          const tasksInCategory = tasks.filter(
+        map((tasks, members) => {
+          const tasksInCategory: TaskModel[] = tasks.filter(
             (task) => task.categoryId === route['categoryId']
           );
 
-          return tasksInCategory.filter(
-            // In case teamMemberIds is null/undefined, return []
-            (filTask) => filTask.teamMemberIds ?? []
+          const tasksWithMembersFallback = tasksInCategory.filter(
+            (filTask: TaskModel) => filTask.teamMemberIds ?? []
           );
+
+          // TODO: Filter members per task
+          return tasksWithMembersFallback;
         })
       );
     })
