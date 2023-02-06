@@ -65,7 +65,7 @@ export class EditTaskComponent {
 
   // TODO: Adjust
   checkIfSelected(memberId: string): boolean {
-    return true;
+    return this.teamMembersFormArray.value.includes(memberId) ? true : false;
   }
 
   // Same problem as when creating a task

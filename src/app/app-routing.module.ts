@@ -18,7 +18,7 @@ import { EditTaskComponentModule } from './components/edit-task/edit-task.compon
 @NgModule({
   imports: [
     RouterModule.forRoot([
-      { path: 'categories', component: CategoriesComponent },
+      { path: '', component: CategoriesComponent },
       { path: 'categories/create', component: CreateCategoryComponent },
       { path: 'categories/edit/:categoryId', component: EditCategoryComponent },
       { path: 'categories/:categoryId', component: CategoryDetailsComponent },
