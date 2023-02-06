@@ -1,26 +1,3 @@
-<!-- TODO: Move this to a separate component - app.component should be clean -->
-<mat-toolbar color="primary">
-  <h1>Welcome to Taskilicious</h1>
-  <span class="topbar-flex"></span>
-  <button
-    *ngIf="hasRoute('categories/')"
-    mat-icon-button
-    aria-label="Categories list"
-    (click)="redirectTo('categories')"
-  >
-    <mat-icon>list</mat-icon>
-  </button>
-  <button
-    *ngIf="!hasRoute('categories/create')"
-    mat-icon-button
-    aria-label="Add a category"
-    (click)="redirectTo('categories/create')"
-  >
-    <mat-icon>add_circle_outline</mat-icon>
-  </button>
-  <!--   TODO: add theme switcher -->
-</mat-toolbar>
-
 <main class="p-5">
   <router-outlet></router-outlet>
 </main>
