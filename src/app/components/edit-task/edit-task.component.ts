@@ -4,7 +4,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { concatMap, switchMap, take, tap } from 'rxjs/operators';
 import { TeamMemberModel } from '../../models/team-member.model';
@@ -31,13 +31,13 @@ export class EditTaskComponent {
     private _teamMembersService: TeamMembersService
   ) {}
 
-  readonly editTaskForm: FormGroup = new FormGroup({
+  readonly editTaskForm = new FormGroup({
     name: new FormControl('', [
       Validators.required,
       Validators.pattern(CustomValidators.LETTERS_ONLY),
     ]),
     category: new FormControl('', Validators.required),
-    teamMemberIds: new FormArray([]),
+    teamMemberIds: new FormControl(new Set<string>([]), { nonNullable: true }),
   });
 
   readonly task$: Observable<TaskModel> = this._activatedRoute.params.pipe(
@@ -48,7 +48,7 @@ export class EditTaskComponent {
       this.editTaskForm.patchValue({
         name: taskDetails.name,
         category: taskDetails.categoryId,
-        teamMemberIds: taskDetails.teamMemberIds,
+        teamMemberIds: new Set<string>(taskDetails.teamMemberIds),
       });
     })
   );
@@ -59,21 +59,36 @@ export class EditTaskComponent {
   readonly teamMembers$: Observable<TeamMemberModel[]> =
     this._teamMembersService.getAllTeamMembers();
 
-  get teamMembersFormArray(): FormArray {
-    return this.editTaskForm.get('teamMemberIds') as FormArray;
+  get teamMembersInTask(): FormControl {
+    return this.editTaskForm.controls.teamMemberIds;
   }
 
-  // TODO: Adjust
+  get currentlySelectedCategory(): string {
+    if (this.editTaskForm.controls?.category?.value) {
+      return this.editTaskForm.controls.category.value;
+    }
+
+    return '';
+  }
+
+  compareCategories(a: string, b: string): boolean {
+    return a === b;
+  }
+
   checkIfSelected(memberId: string): boolean {
-    return this.teamMembersFormArray.value.includes(memberId) ? true : false;
+    return !!this.teamMembersInTask.value.has(memberId);
   }
 
-  // Same problem as when creating a task
   addMemberToArrayOrRemoveMemberFromArray(memberId: string): void {
-    if (!this.teamMembersFormArray.value.includes(memberId)) {
-      this.teamMembersFormArray.push(new FormControl(memberId));
+    if (!this.teamMembersInTask.value.has(memberId)) {
+      const set = new Set(this.teamMembersInTask.value.add(memberId));
+
+      this.teamMembersInTask.patchValue(set);
     } else {
-      this.teamMembersFormArray.removeAt(+memberId - 1);
+      const value = this.teamMembersInTask.value;
+
+      value.delete(memberId);
+      this.teamMembersInTask.patchValue(value);
     }
   }
 
@@ -88,7 +103,9 @@ export class EditTaskComponent {
                 name: editTaskForm.controls.name.value,
                 categoryId: editTaskForm.controls.category.value,
                 id: params['taskId'],
-                teamMemberIds: editTaskForm.controls.teamMemberIds.value,
+                teamMemberIds: Array.from(
+                  editTaskForm.controls.teamMemberIds.value
+                ),
               }
             )
           ),
@@ -103,13 +120,5 @@ export class EditTaskComponent {
         )
         .subscribe();
     }
-  }
-
-  get currentlySelectedCategory(): string {
-    return this.editTaskForm.controls.category.value;
-  }
-
-  compareCategories(a: string, b: string): boolean {
-    return a === b;
   }
 }

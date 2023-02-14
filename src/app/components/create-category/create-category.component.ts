@@ -41,7 +41,7 @@ export class CreateCategoryComponent {
         .pipe(take(1))
         .subscribe(() =>
           //  Go back to parent because that's the list - the list does not show at root
-          this._router.navigate(['..'], { relativeTo: this._activatedRoute })
+          this._router.navigate(['/'], { relativeTo: this._activatedRoute })
         );
     }
   }
