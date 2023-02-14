@@ -80,7 +80,9 @@ export class CreateTaskComponent {
         .createTask({
           name: createTaskForm.controls.name.value,
           categoryId: createTaskForm.controls.category.value,
-          teamMemberIds: createTaskForm.controls.teamMemberIds.value,
+          teamMemberIds: Array.from(
+            createTaskForm.controls.teamMemberIds.value
+          ),
         })
         .pipe(
           take(1),

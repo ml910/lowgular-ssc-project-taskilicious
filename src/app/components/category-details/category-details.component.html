@@ -39,10 +39,7 @@
         </ng-container>
 
         <!-- Team Members -->
-        <ng-container
-          [matColumnDef]="tasksTableColumns[3]"
-          *ngIf="teamMembers$ | async as members"
-        >
+        <ng-container [matColumnDef]="tasksTableColumns[3]">
           <th *matHeaderCellDef mat-header-cell class="pr-8">
             {{ tasksTableColumns[3].valueOf() }}
           </th>
@@ -51,8 +48,8 @@
               <ng-container>
                 <!-- TODO: Now get the images only per task in which they actually appear, not all member avatars ever like now -->
                 <img
-                  *ngFor="let member of members"
-                  [src]="member.avatar || '../../../assets/no-image.png'"
+                  *ngFor="let memberImage of element.memberAvatars"
+                  [src]="memberImage || '../../../assets/no-image.png'"
                   class="h-8 w-8 mr-2"
                 />
               </ng-container>

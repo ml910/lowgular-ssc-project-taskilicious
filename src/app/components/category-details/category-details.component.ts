@@ -74,7 +74,9 @@ export class CategoryDetailsComponent {
   // 1. The GET method from the service does not return tasks by categoryID (then we would have used switchMap)
   // 2. You need to get both tasks and the route data, but you do not want to do it separately
   // 3. All other array options would return TaskModel and not TaskModel[]
-  readonly tasksInCategory$: Observable<TaskModel[]> = combineLatest([
+  readonly tasksInCategory$: Observable<
+    Array<TaskModel | { memberAvatars: string[] }>
+  > = combineLatest([
     // We include refresh$ here because we will use it later. We do not USE it here directly, however
     this.tasksRefresh$,
     // Here is it connected to a BE operation - and only then it actually DOES something
@@ -84,14 +86,34 @@ export class CategoryDetailsComponent {
   ]).pipe(
     switchMap(([refresh, tasks, route, members]) => {
       return this._tasksService.getAllTasks().pipe(
-        map((tasks, members) => {
-          const tasksInCategory: TaskModel[] = tasks.filter(
+        map((tasksss: TaskModel[]) => {
+          const tasksInCategory: TaskModel[] = tasksss.filter(
             (task) => task.categoryId === route['categoryId']
           );
 
-          const tasksWithMembersFallback = tasksInCategory.filter(
-            (filTask: TaskModel) => filTask.teamMemberIds ?? []
-          );
+          // If the BE returned string[], it would work (category 'UI' works for example)
+          const tasksWithMembersFallback: Array<
+            TaskModel | { memberAvatars: string[] }
+          > = tasksInCategory
+            .map((filTask) => ({
+              ...filTask,
+              teamMemberIds: filTask.teamMemberIds ?? [],
+            }))
+            .map((filTask: TaskModel) => {
+              console.log(filTask);
+
+              return {
+                ...filTask,
+                memberAvatars: filTask.teamMemberIds
+                  ?.map(
+                    (id) =>
+                      members.find(
+                        (member: TeamMemberModel) => member.id === id
+                      )?.avatar
+                  )
+                  .filter((avatar: string | undefined) => avatar != null),
+              };
+            });
 
           // TODO: Filter members per task
           return tasksWithMembersFallback;
