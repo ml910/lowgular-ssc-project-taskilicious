@@ -53,10 +53,7 @@
       <h3 class="mb-5 mt-8">Choose Team Members:</h3>
 
       <ng-container *ngIf="teamMembers$ | async as members; else loader">
-        <mat-selection-list
-          role="list"
-          class="flex items-center flex-wrap"
-          formArrayName="teamMemberIds"
+        <mat-selection-list role="list" class="flex items-center flex-wrap"
           ><mat-list-option
             role="listitem"
             class="max-w-xs border border-gray-400 border-solid h-16 m-px"

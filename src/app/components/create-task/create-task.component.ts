@@ -3,7 +3,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, concatMap } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -29,13 +29,17 @@ export class CreateTaskComponent {
     private _teamMembersService: TeamMembersService
   ) {}
 
-  readonly createTaskForm: FormGroup = new FormGroup({
+  readonly createTaskForm = new FormGroup({
     name: new FormControl('', [
       Validators.required,
       Validators.pattern(CustomValidators.LETTERS_ONLY),
     ]),
-    category: new FormControl('', [Validators.required]),
-    teamMemberIds: new FormArray([]),
+    category: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    // Could be FormRecord
+    teamMemberIds: new FormControl(new Set<string>([]), { nonNullable: true }),
   });
 
   readonly categories$: Observable<CategoryModel[]> =
@@ -48,43 +52,22 @@ export class CreateTaskComponent {
     return this.createTaskForm.controls.category.value;
   }
 
-  get teamMembersFormArray(): FormArray {
-    return this.createTaskForm.get('teamMemberIds') as FormArray;
+  get teamMembersControl(): FormControl<Set<string>> {
+    return this.createTaskForm.controls.teamMemberIds;
   }
 
-  // TODO: weird, weird things are happening here. The more you click the less reliable this function becomes.
-  // Chose 1,2,3 -
-  // Chose 1,2,3, removed 3 - no problems
-  // Chose 1 removed 1 - no problems
-  // Chose 1,2 removed 1 - no problems
-  // Chose 1,2,3 removed 2 added 5 - works good!
-  // Chose 1,2,3 removed 1 added 5,6 removed 5 - we have a problem, got 2,3,5,6
   addMemberToArrayOrRemoveMemberFromArray(memberId: string): void {
-    if (!this.teamMembersFormArray.value.includes(memberId)) {
-      this.teamMembersFormArray.push(new FormControl(memberId));
+    if (!this.teamMembersControl.value.has(memberId)) {
+      const set = new Set(this.teamMembersControl.value).add(memberId);
 
-      console.log('ID added: ', memberId);
+      this.teamMembersControl.patchValue(set);
     } else {
-      // if (this.teamMembersFormArray.controls.length === 1) {
-      //   this.teamMembersFormArray.clear();
-      // }
+      const value = this.teamMembersControl.value;
 
-      this.teamMembersFormArray.removeAt(+memberId - 1);
-      console.log('typeof +memberId: ', typeof +memberId); // Number
+      // Deletes in place
+      value.delete(memberId);
+      this.teamMembersControl.patchValue(value);
     }
-
-    console.log(
-      'Team Members control value: ',
-      this.createTaskForm.controls?.teamMemberIds?.value
-    );
-    console.log(
-      'length: ',
-      this.createTaskForm.controls?.teamMemberIds?.value.length
-    );
-    console.log(
-      'All team members controls inside the form: ',
-      this.createTaskForm.controls.teamMemberIds
-    );
   }
 
   compareCategories(a: string, b: CategoryModel): boolean {
