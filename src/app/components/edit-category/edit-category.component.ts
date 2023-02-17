@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { CategoriesService } from '../../services/categories.service';
 import { CategoryModel } from '../../models/category.model';
-import { CustomValidators } from 'src/app/custom-validators.enum';
 
 @Component({
   selector: 'app-edit-category',
@@ -26,10 +25,7 @@ export class EditCategoryComponent {
   ) {}
 
   readonly categoryEditForm: FormGroup = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.pattern(CustomValidators.LETTERS_ONLY),
-    ]),
+    name: new FormControl('', [Validators.required]),
   });
 
   readonly category$: Observable<CategoryModel> =

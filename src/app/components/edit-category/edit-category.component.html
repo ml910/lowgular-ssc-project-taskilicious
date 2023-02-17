@@ -17,9 +17,6 @@
         <mat-error *ngIf="!categoryEditForm.get('name')!.errors?.required"
           >Please use letters only</mat-error
         >
-        <mat-error *ngIf="!categoryEditForm.get('name')!.errors?.pattern"
-          >Entering a name is obligatory</mat-error
-        >
       </mat-form-field>
     </div>
     <div>

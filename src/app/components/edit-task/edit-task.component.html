@@ -25,9 +25,6 @@
         /><mat-error *ngIf="editTaskForm.get('name')!.errors?.required"
           >Task name is required</mat-error
         >
-        <mat-error *ngIf="editTaskForm.get('name')!.errors?.pattern"
-          >Please use letters only</mat-error
-        >
       </mat-form-field>
     </div>
 

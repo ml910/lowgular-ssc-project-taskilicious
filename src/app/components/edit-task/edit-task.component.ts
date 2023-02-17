@@ -32,10 +32,7 @@ export class EditTaskComponent {
   ) {}
 
   readonly editTaskForm = new FormGroup({
-    name: new FormControl('', [
-      Validators.required,
-      Validators.pattern(CustomValidators.LETTERS_ONLY),
-    ]),
+    name: new FormControl('', [Validators.required]),
     category: new FormControl('', Validators.required),
     teamMemberIds: new FormControl(new Set<string>([]), { nonNullable: true }),
   });

@@ -115,7 +115,6 @@ export class CategoryDetailsComponent {
               };
             });
 
-          // TODO: Filter members per task
           return tasksWithMembersFallback;
         })
       );
